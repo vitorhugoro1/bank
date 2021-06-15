@@ -1,9 +1,10 @@
 <?php
 
+use App\Domains\Users\Controllers\SignInController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\MeController;
+use App\Domains\Users\Controllers\LoginController;
+use App\Domains\Users\Controllers\MeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,3 +22,4 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 });
 
 Route::post('auth/token', LoginController::class)->name('login');
+Route::post('auth/create', SignInController::class)->name('signin');

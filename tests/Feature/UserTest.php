@@ -2,13 +2,33 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
+use App\Domains\Users\Models\User;
+use Carbon\Carbon;
+use Illuminate\Foundation\Testing\WithFaker;
 
-class LoginTest extends TestCase
+class UserTest extends TestCase
 {
-    use DatabaseMigrations;
+    use DatabaseMigrations, WithFaker;
+
+    /** @test */
+    public function canCreateUser()
+    {
+        $payload = [
+            'name' => $this->faker->name(),
+            'email' => $this->faker->unique()->safeEmail(),
+            'document' => $this->faker->cpf(false),
+            'birthday' => Carbon::parse($this->faker->dateTimeBetween('-60 years', '-18 years'))->format('Y-m-d'),
+            'password' => 'password'
+        ];
+
+        $this->postJson(route('signin'), $payload)
+            ->assertCreated()
+            ->assertJsonStructure([
+                'token'
+            ]);
+    }
 
     /** @test */
     public function canMakeLogin()
