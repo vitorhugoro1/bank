@@ -1,9 +1,9 @@
 <?php
 
+use App\Domains\Account\Controllers\DepositController;
 use App\Domains\Account\Controllers\UserAccountsController;
 use App\Domains\Account\Controllers\WithdrawalController;
 use App\Domains\Users\Controllers\SignInController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Domains\Users\Controllers\LoginController;
 use App\Domains\Users\Controllers\MeController;
@@ -26,6 +26,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::resource('accounts', UserAccountsController::class, ['except' => ['create', 'edit']]);
 
         Route::post('accounts/{account}/withdrawal', WithdrawalController::class)->name('accounts.withdrawal');
+        Route::post('accounts/{account}/deposit', DepositController::class)->name('accounts.deposit');
     });
 });
 
