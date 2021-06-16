@@ -27,7 +27,8 @@ class LoginController extends Controller
         }
 
         return response()->json([
-            'token' => $user->createToken('api')->plainTextToken
+            'access_token' => $user->createToken('api')->plainTextToken,
+            'token_type' => 'Bearer'
         ]);
     }
 }

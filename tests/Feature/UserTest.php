@@ -47,10 +47,11 @@ class UserTest extends TestCase
         $response
             ->assertOk()
             ->assertJsonStructure([
-                'token'
+                'access_token',
+                'token_type'
             ]);
 
-        ['token' => $token] = $response->decodeResponseJson();
+        ['access_token' => $token] = $response->decodeResponseJson();
 
         $this->withHeader('Authorization', "Bearer $token")
             ->getJson(route('user.me'))
