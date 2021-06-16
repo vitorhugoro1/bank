@@ -53,7 +53,7 @@ class UserTest extends TestCase
         ['token' => $token] = $response->decodeResponseJson();
 
         $this->withHeader('Authorization', "Bearer $token")
-            ->getJson(route('me'))
+            ->getJson(route('user.me'))
             ->assertOk();
     }
 

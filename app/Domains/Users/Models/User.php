@@ -2,6 +2,7 @@
 
 namespace App\Domains\Users\Models;
 
+use App\Domains\Account\Models\Account;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -48,5 +49,10 @@ class User extends Authenticatable
     protected static function newFactory()
     {
         return UserFactory::new();
+    }
+
+    public function accounts()
+    {
+        return $this->hasMany(Account::class);
     }
 }

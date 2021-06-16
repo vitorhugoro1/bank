@@ -11,7 +11,10 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.40",
         "laravel/sanctum": "^2.11",
-        "laravel/tinker": "^2.5"
+        "laravel/tinker": "^2.5",
+        "spatie/data-transfer-object": "^3.3",
+        "spatie/enum": "^3.9",
+        "spatie/laravel-enum": "^2.5"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
