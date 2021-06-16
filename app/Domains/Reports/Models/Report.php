@@ -4,6 +4,7 @@ namespace App\Domains\Reports\Models;
 
 use App\Domains\Account\Models\Account;
 use App\Domains\Reports\Enums\ReportOperationEnum;
+use Database\Factories\ReportFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -36,6 +37,11 @@ class Report extends Model
         static::creating(function (Model $model) {
             $model->setAttribute($model->getKeyName(), Str::uuid());
         });
+    }
+
+    protected static function newFactory()
+    {
+        return ReportFactory::new();
     }
 
     public function account()

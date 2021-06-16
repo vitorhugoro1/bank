@@ -7,6 +7,7 @@ use App\Domains\Users\Controllers\SignInController;
 use Illuminate\Support\Facades\Route;
 use App\Domains\Users\Controllers\LoginController;
 use App\Domains\Users\Controllers\MeController;
+use App\Domains\Reports\Controllers\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +28,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
         Route::post('accounts/{account}/withdrawal', WithdrawalController::class)->name('accounts.withdrawal');
         Route::post('accounts/{account}/deposit', DepositController::class)->name('accounts.deposit');
+
+        Route::resource('accounts.reports', ReportController::class, ['only' => ['index']]);
     });
 });
 
