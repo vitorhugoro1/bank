@@ -5,6 +5,7 @@ namespace App\Domains\Account\Controllers;
 use App\Domains\Account\Requests\StoreAccountRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Domains\Account\Models\Account;
 
 class UserAccountsController extends Controller
 {
@@ -24,5 +25,12 @@ class UserAccountsController extends Controller
             $account,
             201
         );
+    }
+
+    public function show(Account $account)
+    {
+        $this->authorize('view', $account);
+
+        return response()->json($account);
     }
 }
