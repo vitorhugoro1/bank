@@ -1,6 +1,7 @@
 <?php
 
 use App\Domains\Account\Controllers\UserAccountsController;
+use App\Domains\Account\Controllers\WithdrawalController;
 use App\Domains\Users\Controllers\SignInController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::get('/', MeController::class)->name('me');
 
         Route::resource('accounts', UserAccountsController::class, ['except' => ['create', 'edit']]);
+
+        Route::post('accounts/{account}/withdrawal', WithdrawalController::class)->name('accounts.withdrawal');
     });
 });
 
