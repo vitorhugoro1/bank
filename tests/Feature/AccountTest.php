@@ -93,4 +93,79 @@ class AccountTest extends TestCase
                 ]
             ]);
     }
+
+    /** @test */
+    public function canWithdrawalAmount()
+    {
+        Sanctum::actingAs(
+            $this->user,
+            ['*']
+        );
+
+        $account = Account::factory()->create([
+            'user_id' => $this->user->id,
+            'balance' => 30
+        ]);
+
+        $payload = [
+            'amount' => 20
+        ];
+
+        $response = $this->postJson(route('user.accounts.withdrawal', [$account->id]), $payload);
+
+        $response->assertOk()
+            ->assertJsonStructure([
+                'withdrawalAmount',
+                'balance',
+                'notes',
+            ]);
+
+        $decodedResponse = $response->decodeResponseJson();
+
+        $this->assertDatabaseHas(Account::class, [
+            'id' => $account->id,
+            'balance' => $decodedResponse['balance']
+        ]);
+    }
+
+    /** @test */
+    public function notCanWithdrawalMoreThanBalance()
+    {
+        Sanctum::actingAs(
+            $this->user,
+            ['*']
+        );
+
+        $account = Account::factory()->create([
+            'user_id' => $this->user->id,
+            'balance' => 30
+        ]);
+
+        $payload = [
+            'amount' => 31
+        ];
+
+        $this->postJson(route('user.accounts.withdrawal', [$account->id]), $payload)
+            ->assertStatus(400)
+            ->assertJsonFragment([
+                'message' => 'Account does not have enough balance.'
+            ]);
+    }
+
+    /** @test */
+    public function notCanSeeWithdrawal()
+    {
+        Sanctum::actingAs(
+            $this->user,
+            ['*']
+        );
+
+        $account = Account::factory()->create([
+            'user_id' => User::factory()->create(),
+            'balance' => 30
+        ]);
+
+        $this->getJson(route('user.accounts.show', [$account->id]))
+            ->assertStatus(403);
+    }
 }
