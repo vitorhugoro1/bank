@@ -3,6 +3,9 @@
 namespace App\Domains\Account\Models;
 
 use App\Domains\Account\Enums\AccountType;
+use App\Domains\Reports\Actions\IssueOperation;
+use App\Domains\Reports\Enums\ReportOperationEnum;
+use App\Domains\Reports\Models\Report;
 use Illuminate\Database\Eloquent\Model;
 use App\Domains\Users\Models\User;
 use Database\Factories\AccountFactory;
@@ -36,6 +39,15 @@ class Account extends Model
         static::creating(function (Model $model) {
             $model->setAttribute($model->getKeyName(), Str::uuid());
         });
+
+        static::created(function (Model $model) {
+            app(IssueOperation::class)->execute(
+                $model,
+                ReportOperationEnum::created(),
+                0,
+                $model->balance
+            );
+        });
     }
 
     protected static function newFactory()
@@ -46,5 +58,10 @@ class Account extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function report()
+    {
+        return $this->hasMany(Report::class);
     }
 }

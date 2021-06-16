@@ -8,6 +8,8 @@ use App\Domains\Account\Exceptions\BalanceAccountIsLowException;
 use App\Domains\Account\Models\Account;
 use App\Domains\Account\Exceptions\NotHasNoteOptionException;
 use App\Domains\Account\Exceptions\NotCanWithdrawalSelectedAmountException;
+use App\Domains\Reports\Actions\IssueOperation;
+use App\Domains\Reports\Enums\ReportOperationEnum;
 
 class WithdrawalAction
 {
@@ -16,6 +18,11 @@ class WithdrawalAction
     public const ONE_HUNDRED_NOTE = 100;
 
     private const WITHDRAWAL_ACCEPTED_NOTES = [self::TWENTY_NOTE, self::FIFTY_NOTE, self::ONE_HUNDRED_NOTE];
+
+    public function __construct(private IssueOperation $issueOperation)
+    {
+        //
+    }
 
     public function execute(Account $account, WithdrawalRequestData $withdrawalRequestData)
     {
@@ -35,6 +42,13 @@ class WithdrawalAction
 
         $account->balance = $account->balance - $withdrawalRequestData->amount;
         $account->save();
+
+        $this->issueOperation->execute(
+            $account,
+            ReportOperationEnum::withdrawal(),
+            $withdrawalRequestData->amount,
+            $account->balance
+        );
 
         return new WithdrawalResponseData(
             withdrawalAmount: $withdrawalRequestData->amount,
