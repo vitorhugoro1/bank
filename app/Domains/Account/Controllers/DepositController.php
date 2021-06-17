@@ -14,7 +14,7 @@ class DepositController extends Controller
         $this->authorize('view', $account);
 
         return response()->json([
-            'depositAmount' => $request->get('amont'),
+            'depositAmount' => $request->get('amount'),
             'balance' => $depositAction->execute(
                 account: $account,
                 amount: $request->get('amount')
