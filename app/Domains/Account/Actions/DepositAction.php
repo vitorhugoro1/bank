@@ -22,7 +22,8 @@ class DepositAction
             $account,
             ReportOperationEnum::deposit(),
             $amount,
-            $account->balance
+            $account->balance,
+            now()
         );
 
         return $account->balance;

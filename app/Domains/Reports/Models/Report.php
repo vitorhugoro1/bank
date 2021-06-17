@@ -25,7 +25,7 @@ class Report extends Model
 
     protected $casts = [
         'operation' => ReportOperationEnum::class,
-        'occurred_at' => 'timestamp',
+        'occurred_at' => 'datetime',
         'amount' => 'integer',
         'balance' => 'integer'
     ];

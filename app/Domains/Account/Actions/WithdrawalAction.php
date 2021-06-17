@@ -47,7 +47,8 @@ class WithdrawalAction
             $account,
             ReportOperationEnum::withdrawal(),
             $withdrawalRequestData->amount,
-            $account->balance
+            $account->balance,
+            now()
         );
 
         return new WithdrawalResponseData(
