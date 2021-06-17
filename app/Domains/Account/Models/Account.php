@@ -41,7 +41,7 @@ class Account extends Model
         });
 
         static::created(function (Model $model) {
-            app(IssueOperation::class)->execute(
+            app(IssueOperation::class)->onQueue()->execute(
                 $model,
                 ReportOperationEnum::created(),
                 0,

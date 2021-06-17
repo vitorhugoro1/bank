@@ -18,7 +18,7 @@ class DepositAction
         $account->balance = $account->balance + $amount;
         $account->save();
 
-        $this->issueOperation->execute(
+        $this->issueOperation->onQueue()->execute(
             $account,
             ReportOperationEnum::deposit(),
             $amount,

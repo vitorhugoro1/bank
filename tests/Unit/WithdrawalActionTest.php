@@ -10,6 +10,9 @@ use App\Domains\Account\DataTransferObject\WithdrawalRequestData;
 use App\Domains\Account\Exceptions\BalanceAccountIsLowException;
 use App\Domains\Account\Exceptions\NotCanWithdrawalSelectedAmountException;
 use App\Domains\Account\Exceptions\NotHasNoteOptionException;
+use Illuminate\Support\Facades\Queue;
+use Spatie\QueueableAction\Testing\QueueableActionFake;
+use App\Domains\Reports\Actions\IssueOperation;
 
 class WithdrawalActionTest extends TestCase
 {
@@ -36,6 +39,8 @@ class WithdrawalActionTest extends TestCase
         int $notesCountExpected,
         int $balanceAmountExpected
     ) {
+        Queue::fake();
+
         $account = Account::factory()->create([
             'balance' => $balanceAmount
         ]);
@@ -45,6 +50,8 @@ class WithdrawalActionTest extends TestCase
         );
 
         $withdrawalResponse = $this->service->execute($account, $withdrawalRequestData);
+
+        QueueableActionFake::assertPushed(IssueOperation::class);
 
         $account->refresh();
 
@@ -78,6 +85,8 @@ class WithdrawalActionTest extends TestCase
     /** @test */
     public function notHasNoteOptionsForAmount()
     {
+        Queue::fake();
+
         $account = Account::factory()->create([
             'balance' => 230
         ]);
@@ -90,11 +99,15 @@ class WithdrawalActionTest extends TestCase
         $this->expectExceptionMessage('Not can withdrawal selected amount.');
 
         $this->service->execute($account, $withdrawalRequestData);
+
+        QueueableActionFake::assertPushed(IssueOperation::class);
     }
 
     /** @test */
     public function notHaveBalanceOnAccount()
     {
+        Queue::fake();
+
         $account = Account::factory()->create([
             'balance' => 50
         ]);
@@ -107,11 +120,15 @@ class WithdrawalActionTest extends TestCase
         $this->expectExceptionMessage('Account does not have enough balance.');
 
         $this->service->execute($account, $withdrawalRequestData);
+
+        QueueableActionFake::assertPushed(IssueOperation::class);
     }
 
     /** @test */
     public function notCanWithdrawalLessThanMinimumNoteAccepted()
     {
+        Queue::fake();
+
         $account = Account::factory()->create([
             'balance' => 100
         ]);
@@ -124,5 +141,6 @@ class WithdrawalActionTest extends TestCase
         $this->expectExceptionMessage('Not has note option for selected value.');
 
         $this->service->execute($account, $withdrawalRequestData);
+        QueueableActionFake::assertPushed(IssueOperation::class);
     }
 }

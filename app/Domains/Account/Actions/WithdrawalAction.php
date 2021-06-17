@@ -43,7 +43,7 @@ class WithdrawalAction
         $account->balance = $account->balance - $withdrawalRequestData->amount;
         $account->save();
 
-        $this->issueOperation->execute(
+        $this->issueOperation->onQueue()->execute(
             $account,
             ReportOperationEnum::withdrawal(),
             $withdrawalRequestData->amount,

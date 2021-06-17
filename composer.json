@@ -14,7 +14,8 @@
         "laravel/tinker": "^2.5",
         "spatie/data-transfer-object": "^3.3",
         "spatie/enum": "^3.9",
-        "spatie/laravel-enum": "^2.5"
+        "spatie/laravel-enum": "^2.5",
+        "spatie/laravel-queueable-action": "^2.12"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
