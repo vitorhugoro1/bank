@@ -26,8 +26,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
         Route::resource('accounts', UserAccountsController::class, ['except' => ['create', 'edit']]);
 
-        Route::post('accounts/{account}/withdrawal', WithdrawalController::class)->name('accounts.withdrawal');
-        Route::post('accounts/{account}/deposit', DepositController::class)->name('accounts.deposit');
+        Route::group(['middleware' => 'lock.operation'], function () {
+            Route::post('accounts/{account}/withdrawal', WithdrawalController::class)->name('accounts.withdrawal');
+            Route::post('accounts/{account}/deposit', DepositController::class)->name('accounts.deposit');
+        });
 
         Route::resource('accounts.reports', ReportController::class, ['only' => ['index']]);
     });
